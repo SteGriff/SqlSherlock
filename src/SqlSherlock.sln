@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSherlock", "SqlSherlock\SqlSherlock.csproj", "{FF8E8393-4099-4FF4-8AB6-E58C8D640121}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSherlock.Data", "SqlSherlock.Data\SqlSherlock.Data.csproj", "{C77B4532-AC43-403C-AC85-739A98C53C19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF8E8393-4099-4FF4-8AB6-E58C8D640121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8E8393-4099-4FF4-8AB6-E58C8D640121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8E8393-4099-4FF4-8AB6-E58C8D640121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8E8393-4099-4FF4-8AB6-E58C8D640121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77B4532-AC43-403C-AC85-739A98C53C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77B4532-AC43-403C-AC85-739A98C53C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77B4532-AC43-403C-AC85-739A98C53C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77B4532-AC43-403C-AC85-739A98C53C19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EB0E10B-2782-452E-B21B-126B0DD3CA73}
+	EndGlobalSection
+EndGlobal

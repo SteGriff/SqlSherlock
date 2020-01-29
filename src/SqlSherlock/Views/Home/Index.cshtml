@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Sherlock";
+}
+
+<h1>Sherlock</h1>
+
+<div id="app">
+
+    @*<h2>Product</h2>*@
+
+    @*<p>{{Message}}</p>
+    <p><b>Step {{StepNumber}}</b> Loading: {{Loading}}</p>
+
+    <pre>{{Model}}</pre>*@
+
+    <section v-for="query in Queries"
+             v-if="canShow(query)">
+
+        <h3>{{ query.Name }} <small>({{ query.Number }})</small></h3>
+
+        <div v-for="input in query.Inputs"
+             class="form-group">
+            <label :for="input.Name">{{ input.Name }}</label>
+            <input :type="input.InputType"
+                   class="form-control"
+                   :id="input.Name"
+                   :name="input.Name"
+                   v-model="Model[input.Name]">
+        </div>
+
+        <p>
+            <button type="button"
+                    class="btn btn-default"
+                    v-if="showBackButton(query)"
+                    v-on:click="previous">
+                Back
+            </button>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    v-on:click="next(query)">
+                Next
+            </button>
+        </p>
+
+        <div v-if="query.Result && query.Result.Error"
+             class="alert alert-danger" role="alert">{{ query.Result.Error }}</div>
+
+        <div v-if="query.Result"
+             class="panel panel-default pre-scrollable">
+            <div class="panel-heading">{{ query.Name }}</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th v-for="heading in query.Result.ColumnHeadings">{{ heading }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in query.Result.Lines">
+                        <td v-for="cell in row">
+                            {{ cell }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @*<pre>{{ query.Result }}</pre>*@
+    </section>
+
+    <div v-cloak
+         v-if="Loading"
+         class="center-block text-center">
+        <img class="loader"
+             src="/img/loading1.svg" />
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    Message: null,
+                    StepNumber: 0,
+                    Loading: false,
+                    Queries: {},
+                    Model: {}
+                };
+            },
+            methods:
+            {
+                loadState: function () {
+                    self = this;
+                    this.StepNumber = 0;
+                    $.get('/Queries/', function (data) {
+                        self.Queries = data.Queries;
+                        console.log(data);
+                    });
+                },
+                submitQuery: function (query) {
+                    self = this;
+                    var submission = {
+                        step: query.Number,
+                        originalName: query.OriginalName,
+                        model: this.Model
+                    };
+
+                    query.Result = null;
+                    $.post('/Query/', submission, function (response) {
+                        self.Loading = false;
+
+                        console.log("Response", response);
+                        query.Result = response;
+                    });
+                },
+                showBackButton: function (query) {
+                    return query.Number > 0;
+                },
+                isCurrent: function (query) {
+                    return query.Number <= this.StepNumber;
+                },
+                canShow: function (query) {
+                    return query.Number <= this.StepNumber;
+                },
+                next: function (query) {
+                    this.Loading = true;
+                    this.submitQuery(query);
+                    this.StepNumber += 1;
+                },
+                previous: function () {
+                    this.StepNumber -= 1;
+                }
+            },
+            mounted: function () {
+                this.loadState();
+            }
+        });
+    </script>
+}
