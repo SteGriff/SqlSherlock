@@ -50,6 +50,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryFlow.cs" />
     <Compile Include="QueryInput.cs" />
     <Compile Include="QueryLibrary.cs" />
     <Compile Include="SqlParametersBuilder.cs" />

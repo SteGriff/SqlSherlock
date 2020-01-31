@@ -15,10 +15,11 @@ namespace SqlSherlock.Controllers
         public ActionResult Index()
         {
             // TODO Dependency Injection
-            var queryLibrary = new QueryLibrary();
-            var queries = queryLibrary.GetQueries(Request.PhysicalApplicationPath);
+            var queryLibrary = new QueryLibrary(Request.PhysicalApplicationPath);
+            //var queries = queryLibrary.GetQueries(Request.PhysicalApplicationPath);
 
-            var vm = new SherlockViewModel() { Queries = queries };
+            var flows = queryLibrary.GetQueryFlows();
+            var vm = new SherlockViewModel() { Flows = flows };
 
             return Json(vm, JsonRequestBehavior.AllowGet);
         }
