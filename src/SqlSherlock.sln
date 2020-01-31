@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSherlock", "SqlSherlock\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSherlock.Data", "SqlSherlock.Data\SqlSherlock.Data.csproj", "{C77B4532-AC43-403C-AC85-739A98C53C19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSherlock.Data.Tests", "SqlSherlock.Data.Tests\SqlSherlock.Data.Tests.csproj", "{68227AA3-8974-4E83-82BE-E11AD925F671}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C77B4532-AC43-403C-AC85-739A98C53C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77B4532-AC43-403C-AC85-739A98C53C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C77B4532-AC43-403C-AC85-739A98C53C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68227AA3-8974-4E83-82BE-E11AD925F671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68227AA3-8974-4E83-82BE-E11AD925F671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68227AA3-8974-4E83-82BE-E11AD925F671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68227AA3-8974-4E83-82BE-E11AD925F671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

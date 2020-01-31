@@ -10,10 +10,11 @@ namespace SqlSherlock.Data
 {
     public class Query
     {
-        public string Name { get; set; }
-        public int Number { get; set; }
-        public string OriginalName { get; set; }
-        public string FilePath { get; set; }
+        public string Name { get; private set; }
+        public int Number { get; private set; }
+        public string OriginalName { get; private set; }
+        public string FilePath { get; private set; }
+        public List<string> Comments { get; private set; }
 
         /// <summary>
         /// The SQL of the file, minus DECLARE statements which would conflict with
@@ -28,6 +29,11 @@ namespace SqlSherlock.Data
         public List<QueryInput> Inputs { get; set; }
 
         public DataTable Result { get; set; }
+
+        public Query()
+        {
+
+        }
 
         public Query(string name, string file)
         {
@@ -59,6 +65,7 @@ namespace SqlSherlock.Data
 
             ExecutableSql = parser.ExecutableSql;
             SqlParameters = parser.SqlParameters;
+            Comments = parser.CommentLines;
             Inputs = parser.QueryInputs;
         }
 

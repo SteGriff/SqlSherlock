@@ -4,8 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlSherlock.Data
 {
@@ -39,6 +37,8 @@ namespace SqlSherlock.Data
             }
         }
 
+        public List<string> CommentLines { get; set; }
+        
         private List<string> ExecutableLines { get; set; }
 
         public string ExecutableSql
@@ -51,25 +51,60 @@ namespace SqlSherlock.Data
 
         public Parser()
         {
-            SqlParameters = new List<SqlParameter>();
-            ExecutableLines = new List<string>();
+            Init();
         }
 
-        public void ParseSql(string fileName)
+        private void Init()
         {
             SqlParameters = new List<SqlParameter>();
             ExecutableLines = new List<string>();
+            CommentLines = new List<string>();
+        }
 
-            var lines = File.ReadAllLines(fileName);
+        /// <summary>
+        /// Forms an ExecutableSql collection which is the SQL without DECLARE or GO statements, or comments.
+        /// Puts Comments into a separate collection
+        /// </summary>
+        /// <param name="filePath">The file path of the SQL to process</param>
+        public void ParseSql(string filePath)
+        {
+            Init();
+
+            var lines = File.ReadAllLines(filePath);
+            bool inCommentBlock = false;
 
             foreach (var line in lines)
             {
+                // Ignore empty lines
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (IsComment(line)) continue;
 
                 // Remove 'go' statements
                 if (IsGo(line)) continue;
 
+                // Preserve block comment content 
+                if (inCommentBlock)
+                {
+                    if (EndsCommentBlock(line))
+                    {
+                        inCommentBlock = false;
+                    }
+                    SaveCommentIfNonEmpty(line);
+                    continue;
+                }
+                else if (StartsCommentBlock(line))
+                {
+                    inCommentBlock = true;
+                    SaveCommentIfNonEmpty(line);
+                    continue;
+                }
+                else if (IsInlineComment(line))
+                {
+                    // Preserve inline comment content
+                    SaveCommentIfNonEmpty(line);
+                    continue;
+                }
+
+                // Parse delcarations and save meaningful SQL statements
                 var declaration = ParseDeclaration(line);
                 if (declaration != null)
                 {
@@ -83,15 +118,33 @@ namespace SqlSherlock.Data
             }
         }
 
+        private void SaveCommentIfNonEmpty(string line)
+        {
+            string commentContent = line.StripSqlCommentMarkers();
+            if (!string.IsNullOrEmpty(commentContent))
+            {
+                CommentLines.Add(commentContent);
+            }
+        }
+
         /// <summary>
         /// Naive guess at whether the line is a comment. Doesn't account for inside block comments.
         /// </summary>
         /// <param name="line">The trimmed line content of SQL to check</param>
         /// <returns>True if the line is a comment</returns>
-        private bool IsComment(string line)
+        private bool IsInlineComment(string line)
         {
-            line = line.Trim();
-            return line.StartsWith("--") || line.StartsWith("/*") || line.EndsWith("*/");
+            return line.Trim().StartsWith(SqlSyntax.INLINE_COMMENT);
+        }
+
+        private bool StartsCommentBlock(string line)
+        {
+            return line.Trim().StartsWith(SqlSyntax.START_COMMENT);
+        }
+
+        private bool EndsCommentBlock(string line)
+        {
+            return line.Trim().EndsWith(SqlSyntax.END_COMMENT);
         }
 
         private bool IsGo(string line)
