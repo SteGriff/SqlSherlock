@@ -14,14 +14,13 @@
 
     @*<pre>{{model}}</pre>*@
 
-    <template v-if="hasFlows && selectedFlow">
+    <template v-if="hasFlows">
         <select v-model="flowName">
             <option v-for="flow in flows">{{ flow.Name }}</option>
         </select>
-        <span>Selected: {{ flowName }}</span>
     </template>
 
-    <template v-if="!hasFlows && selectedFlow">
+    <template v-if="selectedFlow">
         <query-flow :flow-name="flowName"
                     :queries="selectedFlow.Queries"
                     :model="model">

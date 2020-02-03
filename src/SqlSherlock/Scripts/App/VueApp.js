@@ -26,7 +26,10 @@
                 console.log(data);
                 self.flows = data.Flows;
                 self.hasFlows = data.HasFlows;
-                if (!self.hasFlows) {
+                if (self.hasFlows) {
+                    self.flowName = self.flows[0].Name;
+                }
+                else {
                     self.flowName = 'Default';
                 }
             });
