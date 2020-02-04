@@ -11,7 +11,6 @@
     computed: {
         selectedFlow: function () {
             self = this;
-            console.log("Flow is:", self.flowName);
             if (!self.flows) return {};
             return self.hasFlows
                 ? self.flows.filter(f => f.Name === self.flowName)[0]

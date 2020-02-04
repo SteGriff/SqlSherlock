@@ -7,6 +7,7 @@ namespace SqlSherlock.Data
     {
         public string Name { get; set; }
         public List<Query> Queries { get; set; }
+        public int StepNumber { get; set; }
 
         public QueryFlow()
         {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 
@@ -13,7 +11,10 @@ namespace SqlSherlock.Data
         public string Name { get; private set; }
         public int Number { get; private set; }
         public string OriginalName { get; private set; }
+
+        [ScriptIgnore]
         public string FilePath { get; private set; }
+
         public List<string> Comments { get; private set; }
 
         /// <summary>

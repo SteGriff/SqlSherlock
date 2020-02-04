@@ -15,15 +15,17 @@
     @*<pre>{{model}}</pre>*@
 
     <template v-if="hasFlows">
-        <select v-model="flowName">
+        <select
+                class="form-control"
+                v-model="flowName">
             <option v-for="flow in flows">{{ flow.Name }}</option>
         </select>
     </template>
 
     <template v-if="selectedFlow">
-        <query-flow :flow-name="flowName"
-                    :queries="selectedFlow.Queries"
-                    :model="model">
+        <query-flow :flow="selectedFlow"
+                    :model="model"
+                    v-on:reset="loadState">
         </query-flow>
     </template>
 

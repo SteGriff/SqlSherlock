@@ -1,10 +1,14 @@
 ﻿Vue.component('query-flow', {
-    props: ['queries', 'model', 'flowName'],
+    props: ['flow', 'model'],
     data: function () {
         return {
-            stepNumber: 0,
             loading: false
         };
+    },
+    computed: {
+        queries: function () {
+            return this.flow.Queries;
+        }
     },
     template: `
 <div>
@@ -122,7 +126,7 @@
         submitQuery: function (query) {
             self = this;
             var submission = {
-                flowName: self.flowName,
+                flowName: self.flow.Name,
                 originalName: query.OriginalName,
                 model: self.model
             };
@@ -135,7 +139,7 @@
                 query.Result = response;
 
                 if (!query.Result.Error) {
-                    self.stepNumber = query.Number + 1;
+                    self.flow.StepNumber = query.Number + 1;
                     self.scrollToCurrent();
                 }
             });
@@ -147,29 +151,29 @@
             return query.Number > 0;
         },
         isCurrent: function (query) {
-            return query.Number === this.stepNumber;
+            return query.Number === this.flow.StepNumber;
         },
         canShow: function (query) {
-            return query.Number <= this.stepNumber;
+            return query.Number <= this.flow.StepNumber;
         },
         next: function (query) {
             this.loading = true;
             this.submitQuery(query);
         },
         previous: function (query) {
-            if (query) { this.stepNumber = query.Number - 1; }
-            else { this.stepNumber -= 1; }
+            if (query) { this.flow.StepNumber = query.Number - 1; }
+            else { this.flow.StepNumber -= 1; }
         },
         reset: function () {
-            this.loadState();
+            this.$emit('reset');
         },
         finishedQueryFlow: function () {
-            return this.stepNumber >= this.queries.length;
+            return this.flow.StepNumber >= this.queries.length;
         },
         scrollToCurrent: function () {
             self = this;
             window.setTimeout(function () {
-                var stepIdTag = "#" + self.stepId(self.stepNumber);
+                var stepIdTag = "#" + self.stepId(self.flow.StepNumber);
                 var $nextHeader = $(stepIdTag);
 
                 $('html, body').animate({
@@ -179,6 +183,6 @@
         }
     },
     mounted: function () {
-        this.stepNumber = 0;
+        this.flow.StepNumber = 0;
     }
 });
