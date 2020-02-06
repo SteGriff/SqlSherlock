@@ -8,13 +8,15 @@
     computed: {
         queries: function () {
             return this.flow.Queries;
+        },
+        visibleQueries: function () {
+            return this.flow.Queries.filter(q => q.Number <= this.flow.StepNumber)
         }
     },
     template: `
 <div>
     <section class="row"
-                v-for="query in queries"
-                v-if="canShow(query)">
+        v-for="query in visibleQueries">
 
         <div class="col-md-4"
                 :class="{'inactive' : !isCurrent(query)}">
@@ -67,10 +69,10 @@
             <div v-if="query.Result"
                     class="panel panel-default pre-scrollable">
                 <div class="panel-heading">
-                    <template v-if="query.Comments"
-                                v-for="comment in query.Comments">
-                        {{ comment }}
-                        <br />
+                    <template v-if="query.Comments">
+                        <template v-for="comment in query.Comments">
+                            {{ comment }} <br />
+                        </template>
                     </template>
                     <template v-if="!query.Comments">
                         {{ query.Name }} &ndash; results:
@@ -152,9 +154,6 @@
         },
         isCurrent: function (query) {
             return query.Number === this.flow.StepNumber;
-        },
-        canShow: function (query) {
-            return query.Number <= this.flow.StepNumber;
         },
         next: function (query) {
             this.loading = true;
