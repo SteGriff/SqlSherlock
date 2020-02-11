@@ -15,23 +15,37 @@ namespace SqlSherlock.Data.Tests
         public void SqlParamsBuilder_SetsIntValue()
         {
             var target = new SqlParametersBuilder();
-
+            const int expectedId = 54321;
+            
             var query = new Query()
             {
                 SqlParameters = new List<SqlParameter>()
                 {
-                    new SqlParameter("UserId", System.Data.SqlDbType.Int)
+                    new SqlParameter("@UserId", System.Data.SqlDbType.Int)
                 },
                 Inputs = new List<QueryInput>()
                 {
-                    new QueryInput()
-                    {
-                        
-                    }
+                    new QueryInput("@UserId", System.Data.SqlDbType.Int)
                 }
             };
 
-            //target.PopulateSqlParameters()
+            // For some reason, this is the shape of model data
+            object inModelValue = new[] { (object)expectedId };
+            var model = new Dictionary<string, object>()
+            {
+                {"UserId", inModelValue }
+            };
+
+            // Act
+            var sqlParams = target.PopulateSqlParameters(query, model);
+
+            // Assert
+            Assert.AreEqual(1, sqlParams.Count, "There should be 1 param");
+            var theParam = sqlParams.FirstOrDefault();
+            Assert.IsNotNull(theParam);
+
+            // The value has been assigned
+            Assert.AreEqual(expectedId, theParam.Value);
         }
     }
 }

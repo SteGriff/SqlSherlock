@@ -127,6 +127,16 @@
     {
         submitQuery: function (query) {
             self = this;
+
+            // Create null model member for those left unspecified
+            // This enables queries with nullable params to work
+            for (var input of query.Inputs)
+            {
+                if (!this.model[input.Name]) {
+                    this.model[input.Name] = null;
+                }
+            }
+
             var submission = {
                 flowName: self.flow.Name,
                 originalName: query.OriginalName,
@@ -136,8 +146,6 @@
             query.Result = null;
             $.post('/Query/', submission, function (response) {
                 self.loading = false;
-
-                //console.log("Response", response);
                 query.Result = response;
 
                 if (!query.Result.Error) {

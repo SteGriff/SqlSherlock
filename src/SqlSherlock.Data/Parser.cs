@@ -28,11 +28,7 @@ namespace SqlSherlock.Data
             get
             {
                 return SqlParameters
-                    .Select(p => new QueryInput()
-                    {
-                        SqlName = p.ParameterName,
-                        SqlDataType = p.SqlDbType.ToString().ToLower()
-                    })
+                    .Select(p => new QueryInput(p.ParameterName, p.SqlDbType))
                     .ToList();
             }
         }
@@ -155,20 +151,21 @@ namespace SqlSherlock.Data
         private SqlParameter ParseDeclaration(string line)
         {
             SqlParameter declaration = null;
-            line = line.Trim().ToLower();
-
-            if (!line.Contains("declare")) return null;
+            string originalLine = line.Trim();
 
             // If the author assigns their own value, we don't need an input for it
-            if (line.Contains("=")) return null;
+            if (originalLine.Contains("=")) return null;
+
+            string lowerCaseLine = originalLine.ToLower();
+            if (!lowerCaseLine.Contains("declare")) return null;
 
             // Tokenize the line and parse for name, type, and size:
-            var tokens = line.Split(new char[] { ' ', '\t', '(', ')' });
-
+            var tokens = originalLine.Split(new char[] { ' ', '\t', '(', ')' });
             var paramName = tokens.FirstOrDefault(t => t.StartsWith("@"));
             if (paramName == null) return null;
 
-            var paramType = tokens.FirstOrDefault(t => _knownDataTypes.Contains(t));
+            var lowerCaseTokens = lowerCaseLine.Split(new char[] { ' ', '\t', '(', ')' });
+            var paramType = lowerCaseTokens.FirstOrDefault(t => _knownDataTypes.Contains(t));
             if (paramType == null) return null;
 
             // May have size
@@ -177,7 +174,7 @@ namespace SqlSherlock.Data
                 ? (int?)null
                 : int.Parse(size);
 
-            // Could check null/not null here
+            // Could check for SQL null/not null here
 
             // We have a full parameter
             var dbType = (SqlDbType)Enum.Parse(typeof(SqlDbType), paramType, ignoreCase: true);

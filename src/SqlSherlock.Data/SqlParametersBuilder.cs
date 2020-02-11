@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlSherlock.Data
 {
@@ -17,6 +14,8 @@ namespace SqlSherlock.Data
         /// <returns></returns>
         public List<SqlParameter> PopulateSqlParameters(Query query, Dictionary<string, object> model)
         {
+            var caseInsensitiveModel = new InsensitiveModel(model).Model;
+
             var sqlParams = query.SqlParameters;
             foreach(var sqlParam in sqlParams)
             {
@@ -24,9 +23,10 @@ namespace SqlSherlock.Data
                 if (matchedInput == null) continue;
 
                 var modelKey = matchedInput.Name.ToLower();
-                if (!model.ContainsKey(modelKey)) continue;
+                if (!caseInsensitiveModel.ContainsKey(modelKey)) continue;
 
-                var matchedModelEntry = ((IEnumerable<object>)model[modelKey]).FirstOrDefault();
+                // For some reason, model entries are IEnumerable<object> containing one entry, the piece of data we wanted
+                var matchedModelEntry = ((IEnumerable<object>)caseInsensitiveModel[modelKey]).FirstOrDefault();
                 sqlParam.Value = matchedModelEntry;
             }
 
