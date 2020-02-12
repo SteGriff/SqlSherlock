@@ -18,12 +18,7 @@ namespace SqlSherlock.Data
                 return Path.GetDirectoryName(WebAppPhysicalPath) + @"\sql\";
             }
         }
-
-        public QueryLibrary()
-        {
-
-        }
-
+        
         public QueryLibrary(string webAppPhysicalPath)
         {
             WebAppPhysicalPath = webAppPhysicalPath;

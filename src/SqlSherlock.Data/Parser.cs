@@ -34,7 +34,7 @@ namespace SqlSherlock.Data
         }
 
         public List<string> CommentLines { get; set; }
-        
+
         private List<string> ExecutableLines { get; set; }
 
         public string ExecutableSql
@@ -57,6 +57,7 @@ namespace SqlSherlock.Data
             CommentLines = new List<string>();
         }
 
+
         /// <summary>
         /// Forms an ExecutableSql collection which is the SQL without DECLARE or GO statements, or comments.
         /// Puts Comments into a separate collection
@@ -64,9 +65,18 @@ namespace SqlSherlock.Data
         /// <param name="filePath">The file path of the SQL to process</param>
         public void ParseSql(string filePath)
         {
-            Init();
-
             var lines = File.ReadAllLines(filePath);
+            ParseSql(lines);
+        }
+
+        /// <summary>
+        /// Forms an ExecutableSql collection which is the SQL without DECLARE or GO statements, or comments.
+        /// Puts Comments into a separate collection
+        /// </summary>
+        /// <param name="lines">The Array of lines of SQL to process (usually from File.ReadAllLines())</param>
+        public void ParseSql(string[] lines)
+        {
+            Init();
             bool inCommentBlock = false;
 
             foreach (var line in lines)
@@ -89,7 +99,8 @@ namespace SqlSherlock.Data
                 }
                 else if (StartsCommentBlock(line))
                 {
-                    inCommentBlock = true;
+                    // We're in a comment block if this line doesn't end the block it started /* Like this */
+                    inCommentBlock = !EndsCommentBlock(line);
                     SaveCommentIfNonEmpty(line);
                     continue;
                 }

@@ -54,6 +54,11 @@
     <Compile Include="InsensitiveModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlParametersBuilderTests.cs" />
+    <Compile Include="ParserTests.cs" />
+    <Compile Include="DataTableTests.cs" />
+    <Compile Include="QueryInputTests.cs" />
+    <Compile Include="QueryFlowTests.cs" />
+    <Compile Include="QueryLibraryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

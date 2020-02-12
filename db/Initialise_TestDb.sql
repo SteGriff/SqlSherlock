@@ -50,9 +50,9 @@ values
 (1, 'ActiveBlast Commuter Gilet Men''s Large', 'M', 'L', '2019-12-01', '2038-01-01', 1),
 (1, 'ActiveBlast Commuter Gilet Women''s Large', 'F', 'L', '2019-12-01', '2038-01-01', 1),
 (1, 'ActiveBlast Storm Coat XXS', 'U', '2XS', '2019-12-01', '2038-01-01', 0), -- Stopped production - lack of demand
-(1, 'ActiveBlast Storm Coat Medium', 'U', 'M', '2019-12-01', '2038-01-01', 1),
-(1, 'ActiveBlast Storm Coat Large', 'U', 'L', '2019-12-01', '2038-01-01', 1),
-(1, 'ActiveBlast Storm Coat XL', 'U', 'XL', '2019-12-01', '2038-01-01', 1)
+(2, 'ActiveBlast Storm Coat Medium', 'U', 'M', '2019-12-01', '2038-01-01', 1),
+(2, 'ActiveBlast Storm Coat Large', 'U', 'L', '2019-12-01', '2038-01-01', 1),
+(2, 'ActiveBlast Storm Coat XL', 'U', 'XL', '2019-12-01', '2038-01-01', 1)
 
 create table Seller (
 	ID int identity(1,1) primary key,
