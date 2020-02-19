@@ -22,7 +22,6 @@
         loadState: function () {
             self = this;
             $.get('/Queries/', function (data) {
-                console.log(data);
                 self.flows = data.Flows;
                 self.hasFlows = data.HasFlows;
                 if (self.hasFlows) {

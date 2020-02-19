@@ -33,7 +33,7 @@
                         class="form-control"
                         :id="input.Name"
                         :name="input.Name"
-                        v-model="model[input.Name]">
+                        v-model="model[input.Name.toLowerCase()]">
             </div>
 
             <p>
@@ -130,14 +130,15 @@
 
             // Create null model member for those left unspecified
             // This enables queries with nullable params to work
-            for (var input of query.Inputs)
+            for (const input of query.Inputs)
             {
-                if (!this.model[input.Name]) {
-                    this.model[input.Name] = null;
+                const inputKey = input.Name.toLowerCase();
+                if (!this.model[inputKey]) {
+                    this.model[inputKey] = null;
                 }
             }
 
-            var submission = {
+            const submission = {
                 flowName: self.flow.Name,
                 originalName: query.OriginalName,
                 model: self.model
@@ -180,8 +181,8 @@
         scrollToCurrent: function () {
             self = this;
             window.setTimeout(function () {
-                var stepIdTag = "#" + self.stepId(self.flow.StepNumber);
-                var $nextHeader = $(stepIdTag);
+                const stepIdTag = "#" + self.stepId(self.flow.StepNumber);
+                const $nextHeader = $(stepIdTag);
 
                 $('html, body').animate({
                     scrollTop: $nextHeader.offset().top
