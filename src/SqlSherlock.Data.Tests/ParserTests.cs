@@ -73,6 +73,33 @@ declare @ProductCode nvarchar(10)";
         }
 
         [TestMethod]
+        public void Parser_QueryInputs_ExtractsOneInputPerValidDeclaration()
+        {
+            // Arrange
+            string sql = @"declare @UserId int
+declare @ProductId int
+declare @ProductCode nvarchar(10)";
+            var lines = sql.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            // Act
+            var target = new Parser();
+            target.ParseSql(lines);
+
+            // Assert
+            Assert.AreEqual(3, target.QueryInputs.Count, "There should be 3 QueryInputs");
+
+            Assert.AreEqual("UserId", target.QueryInputs[0].Name);
+            Assert.AreEqual("int", target.QueryInputs[0].SqlDataType);
+
+            Assert.AreEqual("ProductId", target.QueryInputs[1].Name);
+            Assert.AreEqual("int", target.QueryInputs[1].SqlDataType);
+
+            Assert.AreEqual("ProductCode", target.QueryInputs[2].Name);
+            Assert.AreEqual("nvarchar", target.QueryInputs[2].SqlDataType);
+        }
+
+
+        [TestMethod]
         public void Parser_RemovesGo()
         {
             // Arrange
