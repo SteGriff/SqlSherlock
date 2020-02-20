@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace SqlSherlock.Controllers
 {
-    public class QueriesController : Controller
+    public class QueriesController : BaseController
     {
         // GET: Queries
         [HttpGet]

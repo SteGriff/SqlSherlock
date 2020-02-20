@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace SqlSherlock.Controllers
 {
-    public class QueryController : Controller
+    public class QueryController : BaseController
     {
         [HttpPost]
         public ActionResult Index(string flowName, string originalName, Dictionary<string, object> model)
