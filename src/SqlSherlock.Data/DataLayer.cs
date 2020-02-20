@@ -8,11 +8,24 @@ namespace SqlSherlock.Data
 {
     public class DataLayer
     {
+        private string _connectionStringName;
+
+        public DataLayer()
+        {
+            const string defaultConnectionString = "DataConnection";
+            _connectionStringName = defaultConnectionString;
+        }
+
+        public DataLayer(string connectionStringName)
+        {
+            _connectionStringName = connectionStringName;
+        }
+
         protected string ConnectionString
         {
             get
             {
-                return ConfigurationManager.ConnectionStrings["DataConnection"].ConnectionString;
+                return ConfigurationManager.ConnectionStrings[_connectionStringName].ConnectionString;
             }
         }
 

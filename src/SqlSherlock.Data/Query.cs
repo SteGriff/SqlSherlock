@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
@@ -12,7 +13,7 @@ namespace SqlSherlock.Data
         public int Number { get; private set; }
         public string OriginalName { get; private set; }
 
-        [ScriptIgnore]
+        [ScriptIgnore, JsonIgnore]
         public string FilePath { get; private set; }
 
         public List<string> Comments { get; private set; }
@@ -21,10 +22,10 @@ namespace SqlSherlock.Data
         /// The SQL of the file, minus DECLARE statements which would conflict with
         /// user-provided values for SqlParameters
         /// </summary>
-        [ScriptIgnore]
+        [ScriptIgnore, JsonIgnore]
         public string ExecutableSql { get; set; }
 
-        [ScriptIgnore]
+        [ScriptIgnore, JsonIgnore]
         public List<SqlParameter> SqlParameters { get; set; }
 
         public List<QueryInput> Inputs { get; set; }

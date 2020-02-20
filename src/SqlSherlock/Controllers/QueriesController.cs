@@ -1,9 +1,5 @@
 ﻿using SqlSherlock.Data;
 using SqlSherlock.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SqlSherlock.Controllers
@@ -16,10 +12,15 @@ namespace SqlSherlock.Controllers
         {
             // TODO Dependency Injection
             var queryLibrary = new QueryLibrary(Request.PhysicalApplicationPath);
-            //var queries = queryLibrary.GetQueries(Request.PhysicalApplicationPath);
-
             var flows = queryLibrary.GetQueryFlows();
-            var vm = new SherlockViewModel() { Flows = flows };
+
+            var environmentLibrary = new ConnectionLibrary();
+            var envs = environmentLibrary.GetConnections();
+            
+            var vm = new SherlockViewModel() {
+                Environments = envs,
+                Flows = flows
+            };
 
             return Json(vm, JsonRequestBehavior.AllowGet);
         }
