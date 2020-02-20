@@ -2,6 +2,11 @@
     ViewBag.Title = "Sherlock";
 }
 
+@section Styles
+{
+    <link rel="stylesheet" href="~/Content/vue-datepicker-local.css">
+}
+
 <h1>Sherlock</h1>
 
 <div id="app">
@@ -15,8 +20,7 @@
     @*<pre>{{model}}</pre>*@
 
     <template v-if="hasFlows">
-        <select
-                class="form-control"
+        <select class="form-control"
                 v-model="flowName">
             <option v-for="flow in flows">{{ flow.Name }}</option>
         </select>
@@ -39,4 +43,5 @@
 {
     <script src="~/Scripts/App/VueApp.js"></script>
     <script src="~/Scripts/App/QueryFlowComponent.js"></script>
+    <script src="~/Scripts/vue-datepicker-local.js"></script>
 }

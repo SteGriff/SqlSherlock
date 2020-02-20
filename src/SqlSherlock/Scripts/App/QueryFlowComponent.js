@@ -29,8 +29,15 @@
             <div v-for="input in query.Inputs"
                     class="form-group">
                 <label :for="input.Name">{{ input.Name }}</label>
-                <input :type="input.InputType"
+
+                <vue-datepicker-local
+                    v-if="isDate(input)"
+                    v-model="model[input.Name.toLowerCase()]">
+                </vue-datepicker-local>
+
+                <input v-if="!isDate(input)"
                         class="form-control"
+                        :type="input.InputType"
                         :id="input.Name"
                         :name="input.Name"
                         v-model="model[input.Name.toLowerCase()]">
@@ -144,6 +151,8 @@
                 model: self.model
             };
 
+            console.log(submission);
+
             query.Result = null;
             $.post('/Query/', submission, function (response) {
                 self.loading = false;
@@ -163,6 +172,9 @@
         },
         isCurrent: function (query) {
             return query.Number === this.flow.StepNumber;
+        },
+        isDate: function (input) {
+            return input.InputType.indexOf('datetime') !== -1;
         },
         next: function (query) {
             this.loading = true;

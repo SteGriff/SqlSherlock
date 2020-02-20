@@ -9,18 +9,6 @@ namespace SqlSherlock.Data
 {
     public class Parser
     {
-        private List<string> _knownDataTypes = new List<string>() {
-            "int",
-            "bigint",
-            "smallint",
-            "double",
-            "float",
-            "varchar",
-            "nvarchar",
-            "text",
-            "bit"
-        };
-
         public List<SqlParameter> SqlParameters { get; set; }
 
         public List<QueryInput> QueryInputs
@@ -176,7 +164,7 @@ namespace SqlSherlock.Data
             if (paramName == null) return null;
 
             var lowerCaseTokens = lowerCaseLine.Split(new char[] { ' ', '\t', '(', ')' });
-            var paramType = lowerCaseTokens.FirstOrDefault(t => _knownDataTypes.Contains(t));
+            var paramType = lowerCaseTokens.FirstOrDefault(t => DataTypes.InputTypeMap.ContainsKey(t));
             if (paramType == null) return null;
 
             // May have size
