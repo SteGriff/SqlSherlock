@@ -1,5 +1,5 @@
 ﻿Vue.component('query-flow', {
-    props: ['flow', 'model'],
+    props: ['flow', 'model', 'connectionName', 'needsRefresh'],
     data: function () {
         return {
             loading: false
@@ -12,6 +12,87 @@
         visibleQueries: function () {
             return this.flow.Queries.filter(q => q.Number <= this.flow.StepNumber)
         }
+    },
+    methods:
+    {
+        submitQuery: function (query) {
+            self = this;
+
+            // Create null model member for those left unspecified
+            // This enables queries with nullable params to work
+            for (const input of query.Inputs)
+            {
+                const inputKey = input.Name.toLowerCase();
+                if (!this.model[inputKey]) {
+                    this.model[inputKey] = null;
+                }
+            }
+
+            const submission = {
+                flowName: self.flow.Name,
+                originalName: query.OriginalName,
+                connectionName : self.connectionName,
+                model: self.model
+            };
+
+            console.log(submission);
+
+            query.Result = null;
+            $.post('/Query/', submission, function (response) {
+                self.loading = false;
+                query.Result = response;
+                query.RunOn = '' + self.connectionName; //Copy string
+                self.$emit('run', self.connectionName);
+
+                if (!query.Result.Error) {
+                    self.flow.StepNumber = query.Number + 1;
+                    self.scrollToCurrent();
+                }
+            }).fail(function (x) {
+                self.loading = false;
+                query.Result = { 'Error': x.statusText };
+            });
+        },
+        stepId: function (number) {
+            return "step-" + number;
+        },
+        showBackButton: function (query) {
+            return query.Number > 0;
+        },
+        isCurrent: function (query) {
+            return query.Number === this.flow.StepNumber;
+        },
+        isDate: function (input) {
+            return input.InputType.indexOf('datetime') !== -1;
+        },
+        next: function (query) {
+            this.loading = true;
+            this.submitQuery(query);
+        },
+        previous: function (query) {
+            if (query) { this.flow.StepNumber = query.Number - 1; }
+            else { this.flow.StepNumber -= 1; }
+        },
+        reset: function () {
+            this.$emit('reset');
+        },
+        finishedQueryFlow: function () {
+            return this.flow.StepNumber >= this.queries.length;
+        },
+        scrollToCurrent: function () {
+            self = this;
+            window.setTimeout(function () {
+                const stepIdTag = "#" + self.stepId(self.flow.StepNumber);
+                const $nextHeader = $(stepIdTag);
+
+                $('html, body').animate({
+                    scrollTop: $nextHeader.offset().top
+                }, 500);
+            }, 100);
+        }
+    },
+    mounted: function () {
+        this.flow.StepNumber = 0;
     },
     template: `
 <div>
@@ -76,6 +157,7 @@
             <div v-if="query.Result"
                     class="panel panel-default pre-scrollable">
                 <div class="panel-heading">
+                    <strong>{{query.RunOn}}</strong>
                     <template v-if="query.Comments">
                         <template v-for="comment in query.Comments">
                             {{ comment }} <br />
@@ -129,80 +211,5 @@
         <img class="loader"
                 src="/img/loading1.svg" />
     </div>
-</div>`,
-    methods:
-    {
-        submitQuery: function (query) {
-            self = this;
-
-            // Create null model member for those left unspecified
-            // This enables queries with nullable params to work
-            for (const input of query.Inputs)
-            {
-                const inputKey = input.Name.toLowerCase();
-                if (!this.model[inputKey]) {
-                    this.model[inputKey] = null;
-                }
-            }
-
-            const submission = {
-                flowName: self.flow.Name,
-                originalName: query.OriginalName,
-                model: self.model
-            };
-
-            console.log(submission);
-
-            query.Result = null;
-            $.post('/Query/', submission, function (response) {
-                self.loading = false;
-                query.Result = response;
-
-                if (!query.Result.Error) {
-                    self.flow.StepNumber = query.Number + 1;
-                    self.scrollToCurrent();
-                }
-            });
-        },
-        stepId: function (number) {
-            return "step-" + number;
-        },
-        showBackButton: function (query) {
-            return query.Number > 0;
-        },
-        isCurrent: function (query) {
-            return query.Number === this.flow.StepNumber;
-        },
-        isDate: function (input) {
-            return input.InputType.indexOf('datetime') !== -1;
-        },
-        next: function (query) {
-            this.loading = true;
-            this.submitQuery(query);
-        },
-        previous: function (query) {
-            if (query) { this.flow.StepNumber = query.Number - 1; }
-            else { this.flow.StepNumber -= 1; }
-        },
-        reset: function () {
-            this.$emit('reset');
-        },
-        finishedQueryFlow: function () {
-            return this.flow.StepNumber >= this.queries.length;
-        },
-        scrollToCurrent: function () {
-            self = this;
-            window.setTimeout(function () {
-                const stepIdTag = "#" + self.stepId(self.flow.StepNumber);
-                const $nextHeader = $(stepIdTag);
-
-                $('html, body').animate({
-                    scrollTop: $nextHeader.offset().top
-                }, 500);
-            }, 100);
-        }
-    },
-    mounted: function () {
-        this.flow.StepNumber = 0;
-    }
+</div>`
 });

@@ -7,9 +7,35 @@
     <link rel="stylesheet" href="~/Content/vue-datepicker-local.css">
 }
 
-<h1>Sherlock</h1>
+
 
 <div id="app">
+
+    <div class="row well">
+
+        <div class="col-md-4">
+            <h1>Sherlock</h1>
+        </div>
+        
+        <div class="form-group col-md-4" v-if="hasConnections">
+            <label for="connectionName">Connection:</label>
+            <select class="form-control"
+                    name="connectionName"
+                    v-model="connectionName">
+                <option v-for="conn in connections">{{ conn.Name }}</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-4" v-if="hasFlows">
+            <label for="connectionName">Flow:</label>
+            <select class="form-control"
+                    name="flowName"
+                    v-model="flowName">
+                <option v-for="flow in flows">{{ flow.Name }}</option>
+            </select>
+        </div>
+
+    </div>
 
     @*<h2>Product</h2>*@
 
@@ -19,17 +45,13 @@
 
     @*<pre>{{model}}</pre>*@
 
-    <template v-if="hasFlows">
-        <select class="form-control"
-                v-model="flowName">
-            <option v-for="flow in flows">{{ flow.Name }}</option>
-        </select>
-    </template>
-
     <template v-if="selectedFlow">
         <query-flow :flow="selectedFlow"
                     :model="model"
-                    v-on:reset="loadState">
+                    :connection-name="connectionName"
+                    :needs-refresh="needsRefresh"
+                    v-on:reset="loadState"
+                    v-on:run="trackRun">
         </query-flow>
     </template>
 

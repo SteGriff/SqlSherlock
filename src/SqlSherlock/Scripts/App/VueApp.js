@@ -2,10 +2,13 @@
     el: '#app',
     data: function () {
         return {
-            flowName: 'Default',
+            flowName: null,
             flows: {},
+            connectionName: null,
+            connections: [],
             hasFlows: false,
-            model: {}
+            model: {},
+            lastRunConnection: null
         };
     },
     computed: {
@@ -15,6 +18,10 @@
             return self.hasFlows
                 ? self.flows.filter(f => f.Name === self.flowName)[0]
                 : self.flows[0];
+        },
+        hasConnections: function () {
+            if (!this.connections) return false;
+            return this.connections.length > 1;
         }
     },
     methods:
@@ -24,13 +31,24 @@
             $.get('/Queries/', function (data) {
                 self.flows = data.Flows;
                 self.hasFlows = data.HasFlows;
-                if (self.hasFlows) {
-                    self.flowName = self.flows[0].Name;
+                if (!self.flowName) {
+                    self.flowName = self.hasFlows
+                        ? self.flows[0].Name
+                        : self.flowName = 'Default'
                 }
-                else {
-                    self.flowName = 'Default';
+
+                self.connections = data.Environments;
+                if (!self.connectionName) {
+                    self.connectionName = self.connections[0].Name;
                 }
             });
+        },
+        trackRun: function (lastRun) {
+            console.log("trackRun", lastRun);
+            this.lastRunConnection = lastRun;
+        },
+        needsRefresh: function () {
+            return this.lastRunConnection !== this.connectionName;
         }
     },
     mounted: function () {

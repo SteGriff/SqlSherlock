@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 
 namespace SqlSherlock.Data
 {
@@ -32,6 +33,14 @@ namespace SqlSherlock.Data
             }
 
             return result;
+        }
+
+        public bool HasConnectionWithName(string connectionName)
+        {
+            if (string.IsNullOrEmpty(connectionName)) return false;
+            connectionName = connectionName.ToLower();
+            var names = GetConnections().Select(c => c.Name.ToLower());
+            return names.Any(c => c == connectionName);
         }
     }
 }
