@@ -29,6 +29,27 @@ namespace SqlSherlock.Data.Tests
         }
 
         [TestMethod]
+        public void Parser_ExtractsOneDeclaration_WhenValueCommentedOut()
+        {
+            // Arrange
+            string sql = @"declare @UserId int --=123456";
+            var lines = sql.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            // Act
+            var target = new Parser();
+            target.ParseSql(lines);
+
+            // Assert
+            Assert.AreEqual(1, target.SqlParameters.Count, "There should be one SqlParameter");
+            Assert.AreEqual("@UserId", target.SqlParameters[0].ParameterName, "The SqlParameter ParameterName should be correct");
+            Assert.AreEqual(SqlDbType.Int, target.SqlParameters[0].SqlDbType, "The SqlParameter SqlDbType should be correct");
+
+            // Negative assertions
+            Assert.AreEqual(0, target.CommentLines.Count, "There should be no CommentLines");
+            Assert.IsTrue(string.IsNullOrEmpty(target.ExecutableSql), "There should be no ExecutableSql");
+        }
+
+        [TestMethod]
         public void Parser_ExtractsOneDeclarationWithSize()
         {
             // Arrange

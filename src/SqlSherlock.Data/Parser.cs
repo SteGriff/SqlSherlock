@@ -151,6 +151,9 @@ namespace SqlSherlock.Data
         {
             SqlParameter declaration = null;
             string originalLine = line.Trim();
+            
+            // If the line contains an inline comment only keep the first part
+            originalLine = originalLine.Split(new string[] { SqlSyntax.INLINE_COMMENT }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
             // If the author assigns their own value, we don't need an input for it
             if (originalLine.Contains("=")) return null;
