@@ -8,7 +8,9 @@
             connections: [],
             hasFlows: false,
             model: {},
-            lastRunConnection: null
+            lastRunConnection: null,
+            showLogo: true,
+            instanceName : "Sherlock"
         };
     },
     computed: {
@@ -41,6 +43,9 @@
                 if (!self.connectionName) {
                     self.connectionName = self.connections[0].Name;
                 }
+
+                self.instanceName = data.InstanceName;
+                document.title = data.InstanceName;
             });
         },
         trackRun: function (lastRun) {
@@ -49,6 +54,9 @@
         },
         needsRefresh: function () {
             return this.lastRunConnection !== this.connectionName;
+        },
+        noLogo: function () {
+            this.showLogo = false;
         }
     },
     mounted: function () {

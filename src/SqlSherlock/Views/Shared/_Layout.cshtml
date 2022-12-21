@@ -3,26 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Sherlock</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @RenderSection("styles", required: false)
 
     @Scripts.Render("~/bundles/modernizr")
-    <style>
-        [v-cloak] {
-            display: none;
-        }
-
-        .loader {
-            width: 53px;
-            height: 53px;
-            margin: 0.5rem;
-        }
-
-        .inactive {
-            opacity: 0.5;
-        }
-    </style>
 </head>
 <body>
     <div class="container body-content">

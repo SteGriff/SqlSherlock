@@ -22,3 +22,22 @@ select,
 textarea {
     max-width: 280px;
 }
+
+[v-cloak] {
+    display: none;
+}
+
+.loader {
+    width: 53px;
+    height: 53px;
+    margin: 0.5rem;
+}
+
+.inactive {
+    opacity: 0.5;
+}
+
+.logo {
+    height: 40px;
+    vertical-align: top;
+}
