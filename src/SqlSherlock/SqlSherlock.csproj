@@ -161,6 +161,18 @@
     <Content Include="Scripts\vue-datepicker-local.js" />
     <Content Include="Scripts\vue.js" />
     <Content Include="Scripts\vue.min.js" />
+    <Content Include="sql\Product Setup\0. Discover ProductFamily Codes.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\Product Setup\1. Check ProductFamily has Active Products.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\Product Setup\2. Check ProductFamily has Active Brand.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\Product Setup\3. Any Seller allowed to sell the product.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -176,7 +188,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="sql\" />
     <Folder Include="Views\Queries\" />
     <Folder Include="Views\Query\" />
   </ItemGroup>
