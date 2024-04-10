@@ -30,7 +30,7 @@
     {
         loadState: function () {
             self = this;
-            $.get('/Queries/', function (data) {
+            $.get('Queries/', function (data) {
                 self.flows = data.Flows;
                 self.hasFlows = data.HasFlows;
                 if (!self.flowName) {

@@ -1,3 +1,9 @@
+use [master]
+create database TestDb
+go
+
+use [TestDb]
+
 create table Brand (
 	ID int identity(1,1) primary key,
 	Name nvarchar(50),

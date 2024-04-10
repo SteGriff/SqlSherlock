@@ -2,7 +2,8 @@
     props: ['flow', 'model', 'connectionName', 'needsRefresh'],
     data: function () {
         return {
-            loading: false
+            loading: false,
+            expanded: false
         };
     },
     computed: {
@@ -38,7 +39,8 @@
             console.log(submission);
 
             query.Result = null;
-            $.post('/Query/', submission, function (response) {
+            query.Expanded = false;
+            $.post('Query/', submission, function (response) {
                 self.loading = false;
                 query.Result = response;
                 query.RunOn = '' + self.connectionName; //Copy string
@@ -89,6 +91,9 @@
                     scrollTop: $nextHeader.offset().top
                 }, 500);
             }, 100);
+        },
+        toggleExpand: function () {
+            this.expanded = !this.expanded;
         }
     },
     mounted: function () {
@@ -130,7 +135,7 @@
                         :class="{'disabled' : !isCurrent(query)}"
                         :disabled="!isCurrent(query)"
                         v-if="showBackButton(query)"
-                        v-on:click="previous(query)">
+                        @click="previous(query)">
                     Back
                 </button>
 
@@ -138,7 +143,7 @@
                         class="btn btn-primary"
                         :disabled="!isCurrent(query)"
                         :class="{'disabled' : !isCurrent(query)}"
-                        v-on:click="next(query)">
+                        @click="next(query)">
                     Next
                 </button>
             </p>
@@ -155,17 +160,22 @@
             </div>
 
             <div v-if="query.Result"
-                    class="panel panel-default pre-scrollable">
+                    class="panel"
+                    :class="{'panel-default' : !expanded, 'pre-scrollable' : !expanded}">
                 <div class="panel-heading">
-                    <strong>{{query.RunOn}}</strong>
                     <template v-if="query.Comments">
-                        <template v-for="comment in query.Comments">
-                            {{ comment }} <br />
+                        <template v-for="(comment, index) in query.Comments">
+                            {{ comment }} <br v-if="index + 1 < query.Comments.length" />
                         </template>
                     </template>
-                    <template v-if="!query.Comments">
+                    <template v-else>
                         {{ query.Name }} &ndash; results:
                     </template>
+                    <span class="badge">on {{query.RunOn}}</span>
+                    <button type="button" class="btn btn-xs btn-default pull-right" @click="toggleExpand()">
+                        <span class="glyphicon glyphicon-resize-full" v-if="!expanded"></span>
+                        <span class="glyphicon glyphicon-resize-small" v-else></span>
+                    </button>
                 </div>
                 <table class="table">
                     <thead>
@@ -194,12 +204,12 @@
         <p>
             <button type="button"
                     class="btn btn-default"
-                    v-on:click="previous()">
+                    @click="previous()">
                 Back
             </button>
             <button type="button"
                     class="btn btn-warning"
-                    v-on:click="reset()">
+                    @click="reset()">
                 Start again
             </button>
         </p>
@@ -209,7 +219,7 @@
             v-if="loading"
             class="center-block text-center">
         <img class="loader"
-                src="/img/loading1.svg" />
+                src="img/loading1.svg" />
     </div>
 </div>`
 });
