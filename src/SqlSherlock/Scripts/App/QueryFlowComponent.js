@@ -109,7 +109,7 @@
 
             <h3 :id="stepId(query.Number)">
                 {{ query.Name }}
-                <span class="badge">{{ query.Number }}/{{queries.length}}</span>
+                <span class="badge">{{ query.Number + 1 }}/{{queries.length}}</span>
             </h3>
 
             <div v-for="input in query.Inputs"
