@@ -19,20 +19,25 @@
         submitQuery: function (query) {
             self = this;
 
-            // Create null model member for those left unspecified
-            // This enables queries with nullable params to work
-            for (const input of query.Inputs)
-            {
+            // Cast query inputs
+            for (const input of query.Inputs) {
                 const inputKey = input.Name.toLowerCase();
-                if (!this.model[inputKey]) {
-                    this.model[inputKey] = null;
+
+                // Cast checkboxes to bool
+                if (input.InputType === "checkbox") {
+                    this.model[inputKey] = !!this.model[inputKey];
+                    continue;
                 }
+
+                // Use null when unspecified - enables nullable query params
+                if (!this.model[inputKey])
+                    this.model[inputKey] = null;
             }
 
             const submission = {
                 flowName: self.flow.Name,
                 originalName: query.OriginalName,
-                connectionName : self.connectionName,
+                connectionName: self.connectionName,
                 model: self.model
             };
 
