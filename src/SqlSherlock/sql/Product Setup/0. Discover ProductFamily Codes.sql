@@ -11,4 +11,4 @@ pf.Code as ProductFamilyCode,
 pf.Active
 from ProductFamily pf
 where pf.Code like '%' + @ProductFamilyCodeFragment + '%'
-and @IncludeInactive = 1 or pf.Active = 1
+and (@IncludeInactive = 1 or pf.Active = 1)

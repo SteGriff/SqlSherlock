@@ -9,9 +9,7 @@ namespace SqlSherlock
         {
             bundles.Add(new ScriptBundle("~/bundles/js")
                 .Include("~/Scripts/jquery-{version}.js")
-                .Include("~/Scripts/jquery.validate*")
                 .Include("~/Scripts/vue.js")
-                .Include("~/Scripts/bootstrap.js")
             );
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
