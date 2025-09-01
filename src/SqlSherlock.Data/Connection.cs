@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Configuration;
-using System.Web.Script.Serialization;
 
 namespace SqlSherlock.Data
 {
@@ -10,7 +9,7 @@ namespace SqlSherlock.Data
 
         public string ProviderName { get; set; }
 
-        [ScriptIgnore, JsonIgnore]
+        [JsonIgnore]
         public string ConnectionString { get; set; }
 
         public Connection(ConnectionStringSettings connection)

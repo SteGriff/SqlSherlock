@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace SqlSherlock.Data
 {
@@ -13,7 +12,7 @@ namespace SqlSherlock.Data
         public int Number { get; private set; }
         public string OriginalName { get; private set; }
 
-        [ScriptIgnore, JsonIgnore]
+        [JsonIgnore]
         public string FilePath { get; private set; }
 
         public List<string> Comments { get; private set; }
@@ -22,10 +21,10 @@ namespace SqlSherlock.Data
         /// The SQL of the file, minus DECLARE statements which would conflict with
         /// user-provided values for SqlParameters
         /// </summary>
-        [ScriptIgnore, JsonIgnore]
+        [JsonIgnore]
         public string ExecutableSql { get; set; }
 
-        [ScriptIgnore, JsonIgnore]
+        [JsonIgnore]
         public List<SqlParameter> SqlParameters { get; set; }
 
         public List<QueryInput> Inputs { get; set; }

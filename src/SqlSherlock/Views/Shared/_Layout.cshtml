@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="/Content/bootstrap.css" />
+    <link rel="stylesheet" href="/Content/site.css" />
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -16,7 +17,8 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/js")
+    <script src="/Scripts/jquery-3.6.0.js"></script>
+    <script src="/Scripts/vue.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

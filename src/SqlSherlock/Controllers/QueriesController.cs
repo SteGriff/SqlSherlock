@@ -1,18 +1,25 @@
-﻿using SqlSherlock.Data;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using SqlSherlock.Data;
 using SqlSherlock.Models;
 using System.Configuration;
-using System.Web.Mvc;
 
 namespace SqlSherlock.Controllers
 {
-    public class QueriesController : BaseController
+    public class QueriesController : Controller
     {
+        private readonly IWebHostEnvironment _environment;
+
+        public QueriesController(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
         // GET: Queries
         [HttpGet]
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            // TODO Dependency Injection
-            var queryLibrary = new QueryLibrary(Request.PhysicalApplicationPath);
+            var queryLibrary = new QueryLibrary(_environment.ContentRootPath);
             var flows = queryLibrary.GetQueryFlows();
 
             var environmentLibrary = new ConnectionLibrary();
@@ -26,7 +33,7 @@ namespace SqlSherlock.Controllers
                 InstanceName = instanceName
             };
 
-            return Json(vm, JsonRequestBehavior.AllowGet);
+            return Json(vm);
         }
     }
 }

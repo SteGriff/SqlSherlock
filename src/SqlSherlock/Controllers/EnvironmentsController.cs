@@ -1,17 +1,17 @@
-﻿using SqlSherlock.Data;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SqlSherlock.Data;
 
 namespace SqlSherlock.Controllers
 {
-    public class EnvironmentsController : BaseController
+    public class EnvironmentsController : Controller
     {
         // GET: Environments
-        public ActionResult Index()
+        public IActionResult Index()
         {
             var library = new ConnectionLibrary();
             var result = library.GetConnections();
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
     }
 }

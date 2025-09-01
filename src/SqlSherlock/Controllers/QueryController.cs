@@ -1,13 +1,20 @@
-﻿using SqlSherlock.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using SqlSherlock.Data;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Web.Mvc;
 
 namespace SqlSherlock.Controllers
 {
-    public class QueryController : BaseController
+    public class QueryController : Controller
     {
+        private readonly IWebHostEnvironment _environment;
+
+        public QueryController(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
         /// <summary>
         /// Run a query
         /// </summary>
@@ -17,19 +24,19 @@ namespace SqlSherlock.Controllers
         /// <param name="model">The model of user answers</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Index(
+        public IActionResult Index(
             string flowName,
             string originalName,
             string connectionName,
             Dictionary<string, object> model)
         {
-            var queryLibrary = new QueryLibrary(Request.PhysicalApplicationPath);
+            var queryLibrary = new QueryLibrary(_environment.ContentRootPath);
 
             var queries = queryLibrary.GetQueriesForFlowName(flowName);
             var query = queries
                 .FirstOrDefault(q => q.OriginalName.Trim().ToLower() == originalName.Trim().ToLower());
 
-            if (query == null) { return new HttpStatusCodeResult(400, "No such query"); }
+            if (query == null) { return BadRequest("No such query"); }
             
             // Get params from model + query
             var parametersBuilder = new SqlParametersBuilder();
@@ -39,7 +46,7 @@ namespace SqlSherlock.Controllers
             var connLibrary = new ConnectionLibrary();
             if (!connLibrary.HasConnectionWithName(connectionName))
             {
-                return new HttpStatusCodeResult(400, "No such connection");
+                return BadRequest("No such connection");
             }
 
             var dataLayer = new DataLayer(connectionName);
