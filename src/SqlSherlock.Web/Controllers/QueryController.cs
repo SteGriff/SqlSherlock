@@ -1,20 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using SqlSherlock.Data;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SqlSherlock.Controllers
 {
-    public class QueryController : Controller
+    public class QueryController(IWebHostEnvironment environment, IConfiguration configuration) : Controller
     {
-        private readonly IWebHostEnvironment _environment;
-
-        public QueryController(IWebHostEnvironment environment)
-        {
-            _environment = environment;
-        }
-
         /// <summary>
         /// Run a query
         /// </summary>
@@ -30,7 +24,7 @@ namespace SqlSherlock.Controllers
             string connectionName,
             Dictionary<string, object> model)
         {
-            var queryLibrary = new QueryLibrary(_environment.ContentRootPath);
+            var queryLibrary = new QueryLibrary(environment.ContentRootPath);
 
             var queries = queryLibrary.GetQueriesForFlowName(flowName);
             var query = queries
@@ -43,7 +37,7 @@ namespace SqlSherlock.Controllers
             var sqlParameters = parametersBuilder.PopulateSqlParameters(query, model);
 
             // Build a DataLayer
-            var connLibrary = new ConnectionLibrary();
+            var connLibrary = new ConnectionLibrary(configuration);
             if (!connLibrary.HasConnectionWithName(connectionName))
             {
                 return BadRequest("No such connection");

@@ -1,6 +1,5 @@
 ﻿using SqlSherlock.Data;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SqlSherlock.Models
 {
@@ -12,6 +11,6 @@ namespace SqlSherlock.Models
 
         public string InstanceName { get; set; }
 
-        public bool HasFlows { get { return Flows.Count() > 1; } }
+        public bool HasFlows { get { return Flows.Count > 1; } }
     }
 }

@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SqlSherlock.Data;
 
-namespace SqlSherlock.Controllers
+namespace SqlSherlock.Web.Controllers
 {
-    public class EnvironmentsController : Controller
+    public class EnvironmentsController(IConfiguration configuration) : Controller
     {
         // GET: Environments
         public IActionResult Index()
         {
-            var library = new ConnectionLibrary();
-            var result = library.GetConnections();
-
-            return Json(result);
+            var library = new ConnectionLibrary(configuration);
+            var connections = library.GetConnections();
+            return Json(connections);
         }
     }
 }

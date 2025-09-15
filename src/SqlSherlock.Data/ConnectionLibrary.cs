@@ -1,34 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace SqlSherlock.Data
 {
-    public class ConnectionLibrary
+    public class ConnectionLibrary(IConfiguration configuration)
     {
-        private ConnectionStringSettingsCollection _connectionStringSettingsCollection;
-
-        public ConnectionLibrary()
-        {
-            _connectionStringSettingsCollection = ConfigurationManager.ConnectionStrings;
-        }
-
-        public ConnectionLibrary(ConnectionStringSettingsCollection connectionStringSettingsCollection)
-        {
-            _connectionStringSettingsCollection = connectionStringSettingsCollection;
-        }
-
         public List<Connection> GetConnections()
         {
             var result = new List<Connection>();
 
-            foreach (ConnectionStringSettings connection in _connectionStringSettingsCollection)
+            var connectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
+            foreach (var connection in connectionStrings)
             {
-                if (connection.Name == "LocalSqlServer")
+                if (connection.Key == "LocalSqlServer")
                     continue;
 
-                var model = new Connection(connection);
-
+                var model = new Connection(connection.Key, connection.Value);
                 result.Add(model);
             }
 

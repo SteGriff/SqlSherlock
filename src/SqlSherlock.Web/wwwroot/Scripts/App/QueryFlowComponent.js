@@ -17,7 +17,7 @@
     methods:
     {
         submitQuery: function (query) {
-            self = this;
+            const self = this;
 
             // Cast query inputs
             for (const input of query.Inputs) {
@@ -45,7 +45,21 @@
 
             query.Result = null;
             query.Expanded = false;
-            $.post('Query/', submission, function (response) {
+            
+            fetch('Query/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submission)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(response => {
                 self.loading = false;
                 query.Result = response;
                 query.RunOn = '' + self.connectionName; //Copy string
@@ -55,9 +69,10 @@
                     self.flow.StepNumber = query.Number + 1;
                     self.scrollToCurrent();
                 }
-            }).fail(function (x) {
+            })
+            .catch(error => {
                 self.loading = false;
-                query.Result = { 'Error': x.statusText };
+                query.Result = { 'Error': error.message || 'Network error' };
             });
         },
         stepId: function (number) {
@@ -87,14 +102,17 @@
             return this.flow.StepNumber >= this.queries.length;
         },
         scrollToCurrent: function () {
-            self = this;
+            const self = this;
             window.setTimeout(function () {
-                const stepIdTag = "#" + self.stepId(self.flow.StepNumber);
-                const $nextHeader = $(stepIdTag);
+                const stepIdTag = self.stepId(self.flow.StepNumber);
+                const nextHeader = document.getElementById(stepIdTag);
 
-                $('html, body').animate({
-                    scrollTop: $nextHeader.offset().top
-                }, 500);
+                if (nextHeader) {
+                    window.scrollTo({
+                        top: nextHeader.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
             }, 100);
         },
         toggleExpand: function () {
