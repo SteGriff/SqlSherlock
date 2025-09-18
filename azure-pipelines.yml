@@ -7,11 +7,15 @@ pool:
   vmImage: 'windows-latest'
   
 variables:
-  solution: '**/*.sln'
+  solution: 'src/SqlSherlock.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
+
+- script: pwd
+
+- script: ls -al
 
 - script: dotnet build $(solution) --configuration $(buildConfiguration)
   displayName: 'DotNet Build: $(buildConfiguration)'
