@@ -1,7 +1,7 @@
--- Brands published before the given date
+-- Sellers published before the given date
 
 declare @PublishedBefore datetime2
 
 select *
-from Brand
+from Seller
 where PublishedFrom < @PublishedBefore
