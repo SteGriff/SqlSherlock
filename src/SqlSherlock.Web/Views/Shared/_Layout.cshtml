@@ -13,7 +13,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>@ViewBag.Title &mdash; @System.Environment.MachineName</p>
+            <p>
+                <span>@ViewBag.Title &mdash; @System.Environment.MachineName</span>
+                @if (ViewBag.Note != null)
+                {
+                    <span> &mdash; @ViewBag.Note</span>
+                }
+            </p>
         </footer>
     </div>
 
