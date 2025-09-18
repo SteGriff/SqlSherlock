@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SqlSherlock.Data
