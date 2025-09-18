@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <link rel="stylesheet" href="~/Content/site.css" />
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>
+                <span>@ViewBag.Title &mdash; @System.Environment.MachineName</span>
+                @if (ViewBag.Note != null)
+                {
+                    <span> &mdash; @ViewBag.Note</span>
+                }
+            </p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/vue.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

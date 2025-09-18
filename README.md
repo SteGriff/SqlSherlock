@@ -4,13 +4,30 @@ Sherlock makes it easy for the whole team to ask questions of the database, by p
 
 It can be useful for troubleshooting config tables in a database or simply asking questions about the setup of entities, like, which products can this user see?
 
-## Config
+## Setup
 
- 0. Install the site in IIS with a .Net 4 application pool
- 1. Set up a database connection in `web.config`
- 2. Put some SQL files in the SQL directory or create folders for flows (see below)
+ 0. Install the latest "Hosting Bundle" from [Download .Net][dotnet].
+ 1. Install the site in IIS with a No Managed Code app pool (or deploy to a container, or whatever).
+ 1. Set up at least one ConnectionString in `appsettings.json`.
+ 2. Put some SQL files in the `sql` directory or create subdirectories for flows (see below)
+
+[dotnet]: https://dotnet.microsoft.com/en-us/download/dotnet
  
+### Extra Config
+
+In `appsettings.json`:
+
+ + `InstanceName` will appear in the header and Title of the site.
+ + `Note` will appear in the footer, if set.
+ + `ConnectionString` - if only one is specified, will be the fixed used by all queries. If more than one, they will appear as a dropdown.
+
+To alter the logo: 
+
+ + Replace the `wwwroot/img/logo.png` file.
+
 ## Query Flows
+
+*See also [/docs/sherlock-cookbook.md][cook].*
 
 A Query Flow is a load of questions about the same topic. 
 
@@ -59,3 +76,5 @@ You *may* add comments using `-- Inline` or `/* Block */` syntax - they will be 
 Each SQL file *must* run only one query - the parser will remove `GO` statements.
 
 Your SQL files can have side effects if you want. Remember that they will be run everytime the user clicks the 'Next' button on the query, and can be re-run an unlimited number of times.
+
+[cook]: https://github.com/SteGriff/SqlSherlock/blob/main/docs/sherlock-cookbook.md

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 
 namespace SqlSherlock.Data
 {
@@ -6,12 +7,12 @@ namespace SqlSherlock.Data
     {
         public Dictionary<string, object> Model { get; }
 
-        public InsensitiveModel(Dictionary<string, object> userModel)
+        public InsensitiveModel(Dictionary<string, JsonElement> userModel)
         {
-            Model = new Dictionary<string, object>();
+            Model = [];
             foreach(var m in userModel)
             {
-                Model.Add(m.Key.ToLower(), m.Value);
+                Model.Add(m.Key.ToLower(), m.Value.ToValue());
             }
         }
     }

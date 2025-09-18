@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SqlSherlock.Data.Tests
@@ -11,17 +12,23 @@ namespace SqlSherlock.Data.Tests
         [TestMethod]
         public void ConnectionLibrary_IgnoresLocalSqlConnection()
         {
-            var dummy = new ConnectionStringSettingsCollection();
-            dummy.Add(ConnectionFakes.GetLocalSqlServer());
-            dummy.Add(ConnectionFakes.GetFake());
+            var inMemorySettings = new Dictionary<string, string>
+            {
+                {"ConnectionStrings:LocalSqlServer", "Server=localhost;Database=master;Trusted_Connection=True;"},
+                {"ConnectionStrings:FakeConnection", "Server=fake;Database=fakeDb;Trusted_Connection=True;"}
+            };
 
-            var target = new ConnectionLibrary(dummy);
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            var target = new ConnectionLibrary(configuration);
 
             var result = target.GetConnections();
 
             Assert.AreEqual(1, result.Count);
             CollectionAssert.AllItemsAreNotNull(result);
-            Assert.AreEqual(ConnectionFakes.Name, result.FirstOrDefault().Name);
+            Assert.AreEqual("FakeConnection", result.FirstOrDefault().Name);
         }
     }
 }

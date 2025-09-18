@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlSherlock.Data
 {
-    public class QueryLibrary
+    public class QueryLibrary(string webAppPhysicalPath)
     {
-        private string WebAppPhysicalPath { get; set; }
-
         private string SqlPath
         {
             get
             {
-                return Path.GetDirectoryName(WebAppPhysicalPath) + @"\sql\";
+                return webAppPhysicalPath + @"\sql\";
             }
-        }
-        
-        public QueryLibrary(string webAppPhysicalPath)
-        {
-            WebAppPhysicalPath = webAppPhysicalPath;
         }
 
         public List<QueryFlow> GetQueryFlows()

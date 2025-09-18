@@ -1,23 +1,12 @@
-﻿using Newtonsoft.Json;
-using System.Configuration;
-using System.Web.Script.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SqlSherlock.Data
 {
-    public class Connection
+    public class Connection(string name, string connectionString)
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
 
-        public string ProviderName { get; set; }
-
-        [ScriptIgnore, JsonIgnore]
-        public string ConnectionString { get; set; }
-
-        public Connection(ConnectionStringSettings connection)
-        {
-            Name = connection.Name;
-            ProviderName = connection.ProviderName;
-            ConnectionString = connection.ConnectionString;
-        }
+        [JsonIgnore]
+        public string ConnectionString { get; set; } = connectionString;
     }
 }

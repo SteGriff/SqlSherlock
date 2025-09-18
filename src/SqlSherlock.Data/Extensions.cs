@@ -1,4 +1,6 @@
-﻿namespace SqlSherlock.Data
+﻿using System.Text.Json;
+
+namespace SqlSherlock.Data
 {
     public static class Extensions
     {
@@ -18,6 +20,19 @@
             }
 
             return pureLine;
+        }
+
+        public static object ToValue(this JsonElement jsonElement)
+        {
+            return jsonElement.ValueKind switch
+            {
+                JsonValueKind.String => jsonElement.GetString() ?? "",
+                JsonValueKind.Number => jsonElement.GetDecimal(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null,
+                _ => jsonElement.GetRawText()
+            };
         }
     }
 }

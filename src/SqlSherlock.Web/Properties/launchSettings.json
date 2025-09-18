@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "SqlSherlock.Web": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:57926;http://localhost:57927"
+    }
+  }
+}

@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace SqlSherlock.Data.Tests
 {
@@ -11,13 +9,13 @@ namespace SqlSherlock.Data.Tests
     public class InsensitiveModelTests
     {
         [TestMethod]
-        public void InsensitiveModel_LowerCasesModelKeys()
+        public void InsensitiveModel_LowerCasesModelKeys_RetrievesString()
         {
             // Arrange
-            var storedObject = new { Name = "HelloWorld" };
-            var original = new Dictionary<string, object>()
+            var storedValue = "BugsRock";
+            var original = new Dictionary<string, JsonElement>()
             {
-                { "MyExcellentParameter", storedObject }
+                { "MyExcellentParameter", JsonElementHelper.FromPrimitive(storedValue) }
             };
 
             // Act
@@ -31,7 +29,31 @@ namespace SqlSherlock.Data.Tests
 
             // Can retrieve the object by its key
             var retrieved = target.Model[expectedKey];
-            Assert.AreSame(storedObject, retrieved);
+            Assert.AreEqual(storedValue, retrieved.ToString());
+        }
+
+        [TestMethod]
+        public void InsensitiveModel_LowerCasesModelKeys_RetrievesBool()
+        {
+            // Arrange
+            var storedValue = true;
+            var original = new Dictionary<string, JsonElement>()
+            {
+                { "MyBooleanParam", JsonElementHelper.FromPrimitive(storedValue) }
+            };
+
+            // Act
+            var target = new InsensitiveModel(original);
+
+            // Assert
+            // Key is lowercase
+            var expectedKey = "mybooleanparam";
+            var actualKey = target.Model.FirstOrDefault().Key;
+            Assert.AreEqual(expectedKey, actualKey);
+
+            // Can retrieve the object by its key
+            var retrieved = target.Model[expectedKey];
+            Assert.AreEqual(storedValue, (bool)retrieved);
         }
     }
 }
