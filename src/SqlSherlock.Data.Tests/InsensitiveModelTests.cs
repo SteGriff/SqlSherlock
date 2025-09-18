@@ -9,7 +9,7 @@ namespace SqlSherlock.Data.Tests
     public class InsensitiveModelTests
     {
         [TestMethod]
-        public void InsensitiveModel_LowerCasesModelKeys()
+        public void InsensitiveModel_LowerCasesModelKeys_RetrievesString()
         {
             // Arrange
             var storedValue = "BugsRock";
@@ -30,6 +30,30 @@ namespace SqlSherlock.Data.Tests
             // Can retrieve the object by its key
             var retrieved = target.Model[expectedKey];
             Assert.AreEqual(storedValue, retrieved.ToString());
+        }
+
+        [TestMethod]
+        public void InsensitiveModel_LowerCasesModelKeys_RetrievesBool()
+        {
+            // Arrange
+            var storedValue = true;
+            var original = new Dictionary<string, JsonElement>()
+            {
+                { "MyBooleanParam", JsonElementHelper.FromPrimitive(storedValue) }
+            };
+
+            // Act
+            var target = new InsensitiveModel(original);
+
+            // Assert
+            // Key is lowercase
+            var expectedKey = "mybooleanparam";
+            var actualKey = target.Model.FirstOrDefault().Key;
+            Assert.AreEqual(expectedKey, actualKey);
+
+            // Can retrieve the object by its key
+            var retrieved = target.Model[expectedKey];
+            Assert.AreEqual(storedValue, (bool)retrieved);
         }
     }
 }
