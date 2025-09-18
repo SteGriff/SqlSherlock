@@ -11,7 +11,10 @@
             return this.flow.Queries;
         },
         visibleQueries: function () {
-            return this.flow.Queries.filter(q => q.Number <= this.flow.StepNumber)
+            const queriesCopy = [...this.flow.Queries.filter(q => q.Number <= this.flow.StepNumber)];
+            queriesCopy.sort((a, b) => a.Number - b.Number);
+            console.log(queriesCopy);
+            return queriesCopy;
         }
     },
     methods:
@@ -96,14 +99,10 @@
             window.setTimeout(function () {
                 const stepIdTag = self.stepId(self.flow.StepNumber);
                 const nextHeader = document.getElementById(stepIdTag);
-
                 if (nextHeader) {
-                    window.scrollTo({
-                        top: nextHeader.offsetTop,
-                        behavior: 'smooth'
-                    });
+                    nextHeader.scrollIntoView({ behavior: "smooth" });
                 }
-            }, 100);
+            }, 50);
         },
         toggleExpand: function () {
             this.expanded = !this.expanded;
@@ -115,7 +114,7 @@
     template: `
 <div>
     <section class="row"
-        v-for="query in visibleQueries">
+        v-for="query in visibleQueries" :key="query.Number">
 
         <div class="col-md-4"
                 :class="{'inactive' : !isCurrent(query)}">

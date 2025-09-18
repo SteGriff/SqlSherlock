@@ -49,7 +49,6 @@
             document.title = data.InstanceName;
         },
         trackRun: function (lastRun) {
-            console.log("trackRun", lastRun);
             this.lastRunConnection = lastRun;
         },
         needsRefresh: function () {
