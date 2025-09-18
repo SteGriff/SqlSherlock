@@ -13,16 +13,9 @@ variables:
 
 steps:
 
-- script: pwd
-
-- script: ls -al
-
 - script: dotnet build $(solution) --configuration $(buildConfiguration)
   displayName: 'DotNet Build: $(buildConfiguration)'
-
-- script: dotnet publish
-  displayName: 'DotNet Publish'
-  
+    
 - task: PublishBuildArtifacts@1
   displayName: Export ArtifactStagingDirectory
   inputs:
