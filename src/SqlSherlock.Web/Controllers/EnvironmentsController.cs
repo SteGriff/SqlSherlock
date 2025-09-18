@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using SqlSherlock.Data;
 
 namespace SqlSherlock.Web.Controllers

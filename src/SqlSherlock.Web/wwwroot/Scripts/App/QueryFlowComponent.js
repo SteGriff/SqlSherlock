@@ -16,7 +16,7 @@
     },
     methods:
     {
-        submitQuery: function (query) {
+        submitQuery: async function (query) {
             const self = this;
 
             // Cast query inputs
@@ -45,35 +45,25 @@
 
             query.Result = null;
             query.Expanded = false;
-            
-            fetch('Query/', {
+
+            const response = await fetch('Query/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(submission)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-                return response.json();
-            })
-            .then(response => {
-                self.loading = false;
-                query.Result = response;
-                query.RunOn = '' + self.connectionName; //Copy string
-                self.$emit('run', self.connectionName);
-
-                if (!query.Result.Error) {
-                    self.flow.StepNumber = query.Number + 1;
-                    self.scrollToCurrent();
-                }
-            })
-            .catch(error => {
-                self.loading = false;
-                query.Result = { 'Error': error.message || 'Network error' };
             });
+
+            const data = await response.json();
+            self.loading = false;
+            query.Result = data;
+            query.RunOn = '' + self.connectionName; // Copy string
+            self.$emit('run', self.connectionName);
+
+            if (!query.Result.Error) {
+                self.flow.StepNumber = query.Number + 1;
+                self.scrollToCurrent();
+            }
         },
         stepId: function (number) {
             return "step-" + number;

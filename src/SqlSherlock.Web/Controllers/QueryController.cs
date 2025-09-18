@@ -1,49 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using SqlSherlock.Data;
-using System.Collections.Generic;
-using System.Linq;
+using SqlSherlock.Web.Models;
 
-namespace SqlSherlock.Controllers
+namespace SqlSherlock.Web.Controllers
 {
     public class QueryController(IWebHostEnvironment environment, IConfiguration configuration) : Controller
     {
         /// <summary>
         /// Run a query
         /// </summary>
-        /// <param name="flowName">The name of the flow (a folder of SQL files)</param>
-        /// <param name="originalName">The "original" name of the query, like '0. Run stuff.sql'</param>
-        /// <param name="connectionName">The DB connection string name</param>
-        /// <param name="model">The model of user answers</param>
+        /// <param name="data">The <c>QueryData</c> to use for the query run</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Index(
-            string flowName,
-            string originalName,
-            string connectionName,
-            Dictionary<string, object> model)
+        public IActionResult Index([FromBody] QueryDataModel data)
         {
             var queryLibrary = new QueryLibrary(environment.ContentRootPath);
 
-            var queries = queryLibrary.GetQueriesForFlowName(flowName);
+            var queries = queryLibrary.GetQueriesForFlowName(data.FlowName);
             var query = queries
-                .FirstOrDefault(q => q.OriginalName.Trim().ToLower() == originalName.Trim().ToLower());
+                .FirstOrDefault(q => q.OriginalName.Trim().Equals(data.OriginalName.Trim(), StringComparison.CurrentCultureIgnoreCase));
 
             if (query == null) { return BadRequest("No such query"); }
-            
+
             // Get params from model + query
-            var parametersBuilder = new SqlParametersBuilder();
-            var sqlParameters = parametersBuilder.PopulateSqlParameters(query, model);
+            var sqlParameters = SqlParametersBuilder.PopulateSqlParameters(query, data.Model);
 
             // Build a DataLayer
             var connLibrary = new ConnectionLibrary(configuration);
-            if (!connLibrary.HasConnectionWithName(connectionName))
+            if (!connLibrary.HasConnectionWithName(data.ConnectionName))
             {
                 return BadRequest("No such connection");
             }
 
-            var dataLayer = new DataLayer(connectionName);
+            var dataLayer = new DataLayer(data.ConnectionName, configuration);
 
             var resultsTable = dataLayer.GetResults(query, sqlParameters);
             return Json(resultsTable);

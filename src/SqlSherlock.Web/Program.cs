@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Reflection;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews()
-    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null)
-    .PartManager.ApplicationParts.Add(new Microsoft.AspNetCore.Mvc.ApplicationParts.AssemblyPart(Assembly.GetExecutingAssembly()));
+builder.Services
+    .AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; // PascalCase output
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; // Case insensitive input
+    });
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SqlSherlock.Controllers
+namespace SqlSherlock.Web.Controllers
 {
     public class HomeController : Controller
     {

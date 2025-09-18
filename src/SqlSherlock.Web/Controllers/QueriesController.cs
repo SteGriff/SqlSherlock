@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using SqlSherlock.Data;
 using SqlSherlock.Models;
 
-namespace SqlSherlock.Controllers
+namespace SqlSherlock.Web.Controllers
 {
     public class QueriesController(IWebHostEnvironment environment, IConfiguration configuration) : Controller
     {

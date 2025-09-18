@@ -28,35 +28,25 @@
     },
     methods:
     {
-        loadState: function () {
+        loadState: async function () {
             const self = this;
-            fetch('Queries/')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    self.flows = data.Flows;
-                    self.hasFlows = data.HasFlows;
-                    if (!self.flowName) {
-                        self.flowName = self.hasFlows
-                            ? self.flows[0].Name
-                            : self.flowName = 'Default'
-                    }
+            const response = await fetch('Queries/');
+            const data = await response.json();
+            self.flows = data.Flows;
+            self.hasFlows = data.HasFlows;
+            if (!self.flowName) {
+                self.flowName = self.hasFlows
+                    ? self.flows[0].Name
+                    : self.flowName = 'Default'
+            }
 
-                    self.connections = data.Environments;
-                    if (!self.connectionName) {
-                        self.connectionName = self.connections[0].Name;
-                    }
+            self.connections = data.Environments;
+            if (!self.connectionName) {
+                self.connectionName = self.connections[0].Name;
+            }
 
-                    self.instanceName = data.InstanceName;
-                    document.title = data.InstanceName;
-                })
-                .catch(error => {
-                    console.error('Error loading state:', error);
-                });
+            self.instanceName = data.InstanceName;
+            document.title = data.InstanceName;
         },
         trackRun: function (lastRun) {
             console.log("trackRun", lastRun);

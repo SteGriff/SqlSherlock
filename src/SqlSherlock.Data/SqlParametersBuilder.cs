@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.Json;
 
 namespace SqlSherlock.Data
 {
-    public class SqlParametersBuilder
+    public static class SqlParametersBuilder
     {
         /// <summary>
         /// Combine model with Query info to make list<SqlParameter>
@@ -12,7 +13,7 @@ namespace SqlSherlock.Data
         /// <param name="query">The Query, pulled from QueryLibrary</param>
         /// <param name="model">The user's submitted data model from web</param>
         /// <returns></returns>
-        public List<SqlParameter> PopulateSqlParameters(Query query, Dictionary<string, object> model)
+        public static List<SqlParameter> PopulateSqlParameters(Query query, Dictionary<string, JsonElement> model)
         {
             var caseInsensitiveModel = new InsensitiveModel(model).Model;
 
@@ -25,8 +26,7 @@ namespace SqlSherlock.Data
                 var modelKey = matchedInput.Name.ToLower();
                 if (!caseInsensitiveModel.ContainsKey(modelKey)) continue;
 
-                // For some reason, model entries are IEnumerable<object> containing one entry, the piece of data we wanted
-                var matchedModelEntry = ((IEnumerable<object>)caseInsensitiveModel[modelKey]).FirstOrDefault();
+                var matchedModelEntry = caseInsensitiveModel[modelKey];
                 sqlParam.Value = matchedModelEntry;
             }
 

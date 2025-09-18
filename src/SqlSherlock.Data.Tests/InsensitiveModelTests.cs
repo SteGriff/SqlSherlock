@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace SqlSherlock.Data.Tests
 {
@@ -14,10 +12,10 @@ namespace SqlSherlock.Data.Tests
         public void InsensitiveModel_LowerCasesModelKeys()
         {
             // Arrange
-            var storedObject = new { Name = "HelloWorld" };
-            var original = new Dictionary<string, object>()
+            var storedValue = "BugsRock";
+            var original = new Dictionary<string, JsonElement>()
             {
-                { "MyExcellentParameter", storedObject }
+                { "MyExcellentParameter", JsonElementHelper.FromPrimitive(storedValue) }
             };
 
             // Act
@@ -31,7 +29,7 @@ namespace SqlSherlock.Data.Tests
 
             // Can retrieve the object by its key
             var retrieved = target.Model[expectedKey];
-            Assert.AreSame(storedObject, retrieved);
+            Assert.AreEqual(storedValue, retrieved.ToString());
         }
     }
 }

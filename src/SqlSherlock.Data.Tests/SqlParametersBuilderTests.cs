@@ -1,10 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace SqlSherlock.Data.Tests
 {
@@ -14,9 +12,7 @@ namespace SqlSherlock.Data.Tests
         [TestMethod]
         public void SqlParamsBuilder_SetsIntValue()
         {
-            var target = new SqlParametersBuilder();
-            const int expectedId = 54321;
-            
+            int expectedId = 54321;
             var query = new Query()
             {
                 SqlParameters = new List<SqlParameter>()
@@ -29,15 +25,13 @@ namespace SqlSherlock.Data.Tests
                 }
             };
 
-            // For some reason, this is the shape of model data
-            object inModelValue = new[] { (object)expectedId };
-            var model = new Dictionary<string, object>()
+            var model = new Dictionary<string, JsonElement>()
             {
-                {"UserId", inModelValue }
+                {"UserId", JsonElementHelper.FromPrimitive(expectedId) }
             };
 
             // Act
-            var sqlParams = target.PopulateSqlParameters(query, model);
+            var sqlParams = SqlParametersBuilder.PopulateSqlParameters(query, model);
 
             // Assert
             Assert.AreEqual(1, sqlParams.Count, "There should be 1 param");
@@ -45,7 +39,7 @@ namespace SqlSherlock.Data.Tests
             Assert.IsNotNull(theParam);
 
             // The value has been assigned
-            Assert.AreEqual(expectedId, theParam.Value);
+            StringAssert.Equals(expectedId, theParam.Value);
         }
     }
 }
