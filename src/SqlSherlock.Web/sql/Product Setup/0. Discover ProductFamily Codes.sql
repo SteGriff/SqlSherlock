@@ -10,5 +10,5 @@ pf.Name,
 pf.Code as ProductFamilyCode,
 pf.Active
 from ProductFamily pf
-where pf.Code like '%' + @ProductFamilyCodeFragment + '%'
+where pf.Code like '%' + IIF(@ProductFamilyCodeFragment is null, '', @ProductFamilyCodeFragment) + '%'
 and (@IncludeInactive = 1 or pf.Active = 1)

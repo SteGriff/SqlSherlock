@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -27,7 +28,7 @@ namespace SqlSherlock.Data
                 if (!caseInsensitiveModel.ContainsKey(modelKey)) continue;
 
                 var matchedModelEntry = caseInsensitiveModel[modelKey];
-                sqlParam.Value = matchedModelEntry;
+                sqlParam.Value = matchedModelEntry ?? DBNull.Value;
             }
 
             return sqlParams;

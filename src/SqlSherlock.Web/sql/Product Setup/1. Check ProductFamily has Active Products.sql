@@ -1,5 +1,7 @@
 -- Are there any products enabled?:
+
 declare @ProductFamilyCode nvarchar(10)
+
 select
 p.ID as ProductID,
 pf.ID as ProductFamilyID,
